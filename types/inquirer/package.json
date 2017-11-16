@@ -1,0 +1,29 @@
+{
+    "name": "@types/inquirer",
+    "version": "0.0.35",
+    "description": "TypeScript definitions for Inquirer.js",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Qubo",
+            "url": "https://github.com/tkQubo"
+        },
+        {
+            "name": "Parvez",
+            "url": "https://github.com/ppathan"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/through": "*",
+        "@types/rx": "*"
+    },
+    "peerDependencies": {},
+    "typesPublisherContentHash": "a38f1bac14751702e319b2f4ec9e1cd78510b98f71771e920ad27b397b3231c1",
+    "typeScriptVersion": "2.0"
+}

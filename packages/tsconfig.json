@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "lib": ["es2017"],
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "emitDecoratorMetadata": true,
+        "inlineSourceMap": true,
+        "allowJs": false,
+        "inlineSources": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "pretty": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+        "allowUnreachableCode": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./",
+        "paths": {
+            "@radic/generators": ["./generators/types"],
+            "@radic/generators/*": ["./generators/types/*"],
+            "@radic/util": ["./util/types"],
+            "@radic/util/*": ["./util/types/*"],
+            "@radic/console-colors": ["./console-colors/types"],
+            "@radic/console-colors/*": ["./console-colors/types/*"]
+        }
+    }
+}
