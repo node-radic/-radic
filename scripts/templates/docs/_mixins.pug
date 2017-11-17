@@ -1,0 +1,14 @@
+- function ensureStartsWith(should, startWith){
+-   return lodash.startsWith(should, startWith) ? should : startWith+should
+- }
+- function ensureBaseUrl(str){
+-   return ensureStartsWith(str, baseUrl)
+- }
+
+
+
+mixin script(src)
+    script(src=ensureBaseUrl(src))&attributes(attributes)
+
+mixin link(href)
+    link(href=ensureBaseUrl(href))&attributes(attributes)

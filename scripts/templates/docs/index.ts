@@ -1,3 +1,5 @@
+import { LoDashStatic } from 'lodash';
+
 
 export class Docs {
 

@@ -28,6 +28,7 @@ import typedoc = require('gulp-typedoc');
 import mdtoc            = require('markdown-toc');
 import { Template } from './scripts/Template';
 import * as ghPages from 'gulp-gh-pages';
+import { touch } from 'shelljs';
 
 sequence.use(<any> gulp);
 
@@ -61,12 +62,11 @@ const c: RGulpConfig = {
         }
     },
     ghPages: {
-        message: 'Update [timestamp]',
-        push: true,
-        cacheDir: '.publish',
-        branch: 'gh-pages',
-        origin: 'origin',
-        //remoteUrl: ''
+        origin   : 'origin',
+        branch   : 'gh-pages',
+        push     : true,
+        message  : 'update [timestamp]',
+        cacheDir : '.tmp/publish'
     },
     templates      : {
         readme: {
@@ -77,20 +77,13 @@ const c: RGulpConfig = {
             scss: {
                 outFile: './docs/index.css'
             },
-            pug : {}
+            pug : {
+                pretty: true
+            }
         }
     },
     packageDefaults: {
         radic: {
-            ghpages: {
-                remoteUrl: '',
-                origin   : 'origin',
-                branch   : 'gh-pages',
-                push     : true,
-                force    : false,
-                message  : 'update [timestamp]',
-                cacheDir : '.publish'
-            },
             typedoc: {
                 module             : 'commonjs',
                 mode               : 'file',
@@ -103,9 +96,9 @@ const c: RGulpConfig = {
                 excludeExternals   : true,
                 plugins            : [
                     'typedoc-plantuml',
-                    'typedoc-plugin-markdown',
+                    // 'typedoc-plugin-markdown',
                     // 'typedoc-plugin-single-line-tags',
-                    'typedoc-plugin-sourcefile-url'
+                    // 'typedoc-plugin-sourcefile-url'
                 ],
                 exclude            : [ 'types', 'test' ].join(',')
             }
@@ -190,9 +183,11 @@ r.addTemplateParser('scss', (content) => {
 })
 r.addTemplateParser('pug', (content) => {
     const compile = pug.compile(content, _.merge(c.templates.docs.pug, <PugOptions>{
-        pretty: true
+        pretty: true,
+        filename: 'index.pug',
+        basedir: resolve('scripts/templates/docs')
     }))
-    return compile({ packageNames, packages, packagePaths });
+    return compile({ packageNames, packages, packagePaths, baseUrl: 'https://robin.radic.nl/npm-packages', lodash: _ });
 })
 //endregion
 
@@ -223,7 +218,11 @@ const createTsTask = (name: string, pkg: PackageData, dest, tsProject: TSProject
         .concat(globule.find(join(pkg.path.to('*.js'))));
 
     if ( pkg.package.radic.typedoc !== false ) {
-        gulp.task('docs:' + name, () => gulp.src(pkg.path.to('src/**/*.ts')).pipe(typedoc(<GulpTypedocOptions> pkg.package.radic.typedoc)))
+        gulp.task('docs:' + name, () => gulp.src(pkg.path.to('src/**/*.ts')).pipe(typedoc(_.merge(pkg.package.radic.typedoc, <GulpTypedocOptions> {
+            name: pkg.directory,
+            out: `./docs/${pkg.directory}`,
+            json               : `docs/${pkg.directory}/typedoc.json`,
+        }))))
         cleanPaths.push(pkg.package.radic.typedoc.out)
     }
     gulp.task('clean:' + name, (cb) => { pump(gulp.src(cleanPaths), clean(), (err) => cb(err)) });
@@ -366,6 +365,9 @@ gulp.task('docs:templates', [ 'clean:docs:templates' ], (cb) => {
     // create index page / style
     r.template('docs/index.pug').applyParsers([ 'pug' ]).writeTo('docs/index.html', true);
     log(`Compiled and written {cyan}templates/docs/index.pug{/cyan} to {cyan}docs/index.html{/cyan}`)
+
+
+
     r.template('docs/stylesheet.scss').parse(function(this:Template, content:string) {
         let result = scss.renderSync({
             file   : this.getFilePath()
@@ -403,10 +405,12 @@ gulp.task('docs:serve', [ 'docs' ], () => {
         }
     })
 });
-gulp.task(`clean:docs`, (cb) => { pump(gulp.src('docs'), clean(), (err) => cb(err)) });
+
+gulp.task(`clean:docs`, (cb) => { pump(gulp.src('docs/*'), clean(), (err) => cb(err)) });
 gulp.task(`clean:docs:templates`, (cb) => { pump(gulp.src('docs/{index.html,stylesheet.scss}'), clean(), (err) => cb(err)) });
 gulp.task('docs', () => sequence('clean:docs', 'docs:ts', 'docs:templates', 'docs:script'))
 gulp.task('docs:deploy', () => {
+    touch('docs/.nojekyll');
     return gulp.src('./docs/**/*').pipe(ghPages(c.ghPages))
 })
 

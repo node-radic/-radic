@@ -1,3 +1,19 @@
+- function ensureStartsWith(should, startWith){
+-   return lodash.startsWith(should, startWith) ? should : should + startWith
+- }
+- function url(str){
+-   return ensureStartsWith(str, baseUrl)
+- }
+
+
+
+mixin script(src)
+    script(src=url(src))&attributes(attributes)
+
+mixin link(href)
+    link(href=url(href))&attributes(attributes)
+
+
 doctype html
 html(lang='en')
 
@@ -8,7 +24,7 @@ html(lang='en')
         //link(href='https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css', rel='stylesheet', integrity='sha384-S7YMK1xjUjSpEnF4P8hPUcgjXYLZKK3fQW1j5ObLSl787II9p8RO9XUGehRmKsxd', crossorigin='anonymous')
         //link(href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb", crossorigin="anonymous")
         link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", rel="stylesheet", integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN", crossorigin="anonymous")
-        link(href="/stylesheet.css", rel="stylesheet")
+        +link("/stylesheet.css")(rel="stylesheet")
     body.page-radic-npm-packages
 
         .navbar.navbar-expand-lg.fixed-top.navbar-dark.bg-primary
@@ -1009,4 +1025,4 @@ html(lang='en')
         script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.js')
         //script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS", crossorigin="anonymous")
         script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js", integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ", crossorigin="anonymous")
-        script(src="/index.js")
+        +script("/index.js")
