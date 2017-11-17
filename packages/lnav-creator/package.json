@@ -1,0 +1,25 @@
+{
+    "name": "@radic/lnav-creator",
+    "version": "0.0.1",
+    "description": "Lnav log string creator",
+    "main": "index.js",
+    "types": "types",
+    "author": "Robin Radic",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/robinradic/npm-packages"
+    },
+    "homepage": "https://github.com/robinradic/npm-packages",
+    "scripts": {
+        "build": "tsc"
+    },
+    "bin": {
+        "lnav-creator": "bin/lnav-creator.js"
+    },
+    "dependencies": {
+        "lodash": "^4.15.0",
+        "inquirer": "^4.0.0",
+        "globule": "^1.2.0"
+    }
+}
