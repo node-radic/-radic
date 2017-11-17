@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es2017", "dom"],
+        "moduleResolution": "node",
+        "module": "umd",
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "declaration": false,
+        "experimentalDecorators": true,
+        "pretty": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+        "allowUnreachableCode": true,
+        "typeRoots": [
+            "../../../node_modules/@types"
+        ],
+        "baseUrl": "./",
+        "outDir": "../../../docs/"
+    },
+    "include": [
+        "index.ts"
+    ],
+    "exclude": [
+        "./node_modules",
+        "./packages",
+        "./packages/*/types"
+    ],
+    "compileOnSave": true,
+    "typeAcquisition": {
+        "enable": true
+    }
+}

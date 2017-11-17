@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Colors } from '../packages/console-colors/src/lib/colors';
 import { Parser } from '../packages/console-colors/src/lib/parser';
 import { OutputUtil } from './OutputUtil';
-import { RConfig, OutputOptions } from './interfaces';
+import { RGulpConfig, OutputOptions } from './interfaces';
 import { inspect } from 'util';
 import { createLogger} from './logger';
 import { LoggerInstance } from 'winston';
@@ -17,7 +17,7 @@ export class IO {
 
     public get types(): QuestionType[] { return [ 'input', 'confirm', 'list', 'rawlist', 'expand', 'checkbox', 'password', 'autocomplete', 'datetime' ] }
 
-    constructor(protected config:RConfig) {
+    constructor(protected config:RGulpConfig) {
         let promptNames = Object.keys(prompts);
         if ( ! promptNames.includes('autocomplete') ) registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
         if ( ! promptNames.includes('datetime') ) registerPrompt('datetime', require('inquirer-datepicker-prompt'))

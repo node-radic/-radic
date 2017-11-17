@@ -3,10 +3,10 @@ import { config, ConsoleTransportOptions, LeveledLogMethod, LogCallback, Logger,
 import { figures } from './figures';
 import * as util from 'util';
 import { Parser } from '../packages/console-colors/src/lib/parser';
-import { LogLevel, RLoggerConfig } from './interfaces';
+import { LogLevel, RGulpLoggerConfig } from './interfaces';
 import * as moment from 'moment';
 
-export function createLogger(opts:RLoggerConfig) :LoggerInstance{
+export function createLogger(opts:RGulpLoggerConfig) :LoggerInstance{
 
 //region: todo: get from @radic/util
     let kindsOf: any = {};

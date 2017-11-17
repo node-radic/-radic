@@ -6,6 +6,47 @@ import { InspectOptions } from 'util';
 import { MarkdownTocOptions } from 'markdown-toc';
 
 import { TsConfig } from 'gulp-typescript/release/types';
+import {Options as PugOptions} from 'pug';
+
+
+export interface RGulpLoggerConfig {
+    [key: string]: any
+
+    level        ?: LogLevel,
+    useLevelIcons?: boolean
+    timestamp?: boolean
+}
+
+export interface RGulpConfig {
+    [key: string]: any
+
+    templatesPath?: string
+    idea ?: boolean
+    pkg  ?: IPackageJSON
+    lerna?: any
+    log?: RGulpLoggerConfig,
+    templates?: {
+        readme?: MarkdownTocOptions,
+        docs?: {
+            scss?:SCSS.Options
+            pug?:PugOptions
+        }
+    }
+    ts   ?: {
+        [key: string]: any
+        config    ?: any
+        taskPrefix?: string,
+        defaults  ?: TSProjectOptions
+    },
+    packageDefaults?: Partial<IPackageJSON>
+}
+
+export interface RPackageJsonOptions {
+    [key: string]: any
+    typedoc?: GulpTypedocOptions | false
+    ghpages?: GulpGhPagesOptions | false
+}
+
 
 export interface PackageData {
     path: {
@@ -56,11 +97,7 @@ export interface IPackageJSON extends Object {
 
     [key: string]: any
 
-    radic?: {
-        [key: string]: any
-        typedoc?: GulpTypedocOptions | false
-        ghpages?: GulpGhPagesOptions | false
-    }
+    radic?: RPackageJsonOptions
 
     readonly name: string;
 
@@ -218,32 +255,6 @@ export type PartialDeep<T> = {
 export type TSProjectOptions = Settings & ts.CompilerOptions
 export type IdeaBoolean = 'true' | 'false'
 
-export interface RLoggerConfig {
-    [key: string]: any
-
-    level        ?: LogLevel,
-    useLevelIcons?: boolean
-    timestamp?: boolean
-}
-
-export interface RConfig {
-    [key: string]: any
-
-    templatesPath?: string
-    idea ?: boolean
-    pkg  ?: IPackageJSON
-    lerna?: any
-    log?: RLoggerConfig,
-    readme?: MarkdownTocOptions,
-    ts   ?: {
-        [key: string]: any
-        config    ?: any
-        taskPrefix?: string,
-        defaults  ?: TSProjectOptions
-    },
-    packageDefaults?: Partial<IPackageJSON>
-}
-
 export interface IdeaIml {
     module: {
         $: { type: string, version: string },
@@ -396,6 +407,57 @@ export interface OutputHelperOptionsConfig {
     tableStyle?: OutputHelperOptionsConfigTableStyles
 }
 
+
+
+export namespace SCSS {
+
+    export type ImporterReturnType = { file: string } | { contents: string } | Error | null;
+
+    export interface Importer {
+        (url: string, prev: string, done: (data: ImporterReturnType) => void): ImporterReturnType | void;
+    }
+
+    export interface Options {
+        file?: string;
+        data?: string;
+        importer?: Importer | Importer[];
+        functions?: { [key: string]: Function };
+        includePaths?: string[];
+        indentedSyntax?: boolean;
+        indentType?: string;
+        indentWidth?: number;
+        linefeed?: string;
+        omitSourceMapUrl?: boolean;
+        outFile?: string;
+        outputStyle?: "compact" | "compressed" | "expanded" | "nested";
+        precision?: number;
+        sourceComments?: boolean;
+        sourceMap?: boolean | string;
+        sourceMapContents?: boolean;
+        sourceMapEmbed?: boolean;
+        sourceMapRoot?: string;
+    }
+
+    export interface SassError extends Error {
+        message: string;
+        line: number;
+        column: number;
+        status: number;
+        file: string;
+    }
+
+    export interface Result {
+        css: Buffer;
+        map: Buffer;
+        stats: {
+            entry: string;
+            start: number;
+            end: number;
+            duration: number;
+            includedFiles: string[];
+        }
+    }
+}
 
 export interface Figures {
     tick: string

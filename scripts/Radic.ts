@@ -1,6 +1,6 @@
 import { LoggerInstance } from 'winston';
 import { IO } from './IO';
-import { RConfig } from './interfaces';
+import { RGulpConfig } from './interfaces';
 import { createLogger } from './logger';
 import { ChoiceType } from 'inquirer';
 import { Parser, Template } from './Template';
@@ -11,7 +11,7 @@ export class Radic {
     protected io: IO
     protected logger: LoggerInstance
 
-    constructor(protected config: RConfig) {
+    constructor(protected config: RGulpConfig) {
         this.io     = new IO(config)
         this.logger = createLogger(config.log)
 
@@ -22,6 +22,7 @@ export class Radic {
     template (name: string): Template {
         let filePath = resolve(this.config.templatesPath, name);
         let template = new Template(this)
+        template.setFilePath(filePath);
         template.setContent(readFileSync(filePath, 'utf-8'));
         return template;
     }

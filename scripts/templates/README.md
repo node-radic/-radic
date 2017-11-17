@@ -24,16 +24,11 @@ Packages
 
 Development
 -----------
-
+### Primary toolset
 - Lerna
     - Includes example for extending it's CLI, extending commands or adding new ones.
 - Typescript (NodeJS configuration)
 - Typedoc
-    - [typedoc-plugin-markdown](https://github.com/tgreyuk/typedoc-plugin-markdown)
-    - [typedoc-plugin-sourcefile-url](https://npmjs.com/package/typedoc-plugin-sourcefile-url)
-    - [typedoc-plugin-single-line-tags](https://npmjs.com/package/typedoc-plugin-single-line-tags)
-    - [typedoc-plugin-context"](https://npmjs.com/package/typedoc-plugin-context")
-    - [typedoc-plantuml](https://npmjs.com/package/typedoc-plantuml)
 - Mocha, Mocha Typescript, Chai
 - Gulp, optionally with:
     - Automatic Typescript packages task builder (clean,build,watch) for both `src` and `test`
@@ -41,3 +36,59 @@ Development
 - IntelliJ IDEA (php/webstorm) run configurations
     - Debugging Typescript code using ts-node
     - Debugging/running Gulp using ts-node
+
+
+### Workflow
+
+- Centered around Typescript.
+- `tsconfig.json` inheritance. The base [`tsconfig.json`](packages/tsconfig.json) is located inside the `packages` directory.
+- Each package has its own `tsconfig.json`, which extends the base `tsconfig.json` in the parent folder.
+- Most of the workflow uses fixed names and paths. This is hard-coded into several locations such as `gulpfile.ts`
+- Everything that's located inside the `src` directoroy of a package will be compiled and written into the package it's root directory.
+
+An example of pre-compiled package:
+```
+- src
+    - index.ts
+    - bin
+        foo.ts
+    - lib
+        - file1.ts
+        - file2.ts
+- test
+- package.json
+- tsconfig.json
+```
+
+An example of the same package, but compiled:
+```
+- index.js
+- bin
+    foo.js
+- lib
+    - file1.js
+    - file2.js
+- types
+    - index.d.ts
+- src
+    - index.ts
+    - bin
+        foo.ts
+    - lib
+        - file1.ts
+        - file2.ts
+- test
+- package.json
+- tsconfig.json
+```
+
+### Tasks
+- Running `gulp tasks` would give a rough overview. Alternatively you could use `gulp tasks -d 5` for deeper task overview
+- Running `gulp watch` will invoke watchers for each package.
+- `gulp watch:ts:util` will only invoke watcher for the util directory
+
+
+### Docs
+- Using `gulp docs` will generate Typedoc into the repositories root directory, each package inside its own directory. A index.html file will also be generated.
+- Ugins `gulp deploy` will execute `gulp docs` and then deploy the documentation onto gh-pages.
+

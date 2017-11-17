@@ -13,26 +13,33 @@ import { basename, join, resolve } from 'path';
 import * as _ from 'lodash';
 import { existsSync, statSync } from 'fs';
 import { exec } from 'child_process';
-import { GulpTypedocOptions, IdeaIml, IdeaJsMappings, PackageData, RConfig, TSProjectOptions } from './scripts/interfaces';
+import { GulpTypedocOptions, IdeaIml, IdeaJsMappings, PackageData, RGulpConfig, TSProjectOptions } from './scripts/interfaces';
 import * as yargs from 'yargs';
 import { defer } from 'q';
 import { Radic } from './scripts/Radic';
+import * as scss from 'node-sass';
+import * as pug from 'pug';
+import { Options as PugOptions } from 'pug';
+import * as browserSync from 'browser-sync';
+import * as sequence from 'run-sequence';
+import { isArray } from 'util';
 // noinspection ES6UnusedImports
 import typedoc = require('gulp-typedoc');
 import mdtoc            = require('markdown-toc');
-import { ls } from 'shelljs';
+import { Template } from './scripts/Template';
 
+sequence.use(<any> gulp);
 
 const clean            = require('gulp-clean')
 const pump             = require('pump')
 const DependencySorter = require('dependency-sorter')
-
+const docsServer       = browserSync.create();
 
 //endregion
 
 
 //region: CONFIG
-const c: RConfig = {
+const c: RGulpConfig = {
     idea           : true,
     templatesPath  : resolve('./scripts/templates'),
     pkg            : require('./package.json'),
@@ -52,9 +59,17 @@ const c: RConfig = {
             inlineSources  : false
         }
     },
-    readme         : {
-        firsth1: true,
-        bullets: '-'
+    templates      : {
+        readme: {
+            firsth1: true,
+            bullets: '-'
+        },
+        docs  : {
+            scss: {
+                outFile: './docs/index.css'
+            },
+            pug : {}
+        }
     },
     packageDefaults: {
         radic: {
@@ -98,10 +113,6 @@ const defined = (val) => val !== undefined
 const info    = r.log.bind(r)
 const log     = r.log.bind(r)
 const error   = r.error.bind(r)
-r.addTemplateParser('markdown-readme-toc', (content) => {
-    let toc = mdtoc(content, c.readme)
-    return content.replace('[[TOC]]', toc.content);
-});
 Object.assign(gutil, { log: (msg, ...optional) => info(msg, ...optional) });
 //endregion
 
@@ -140,8 +151,8 @@ const packages: PackageData[] = new DependencySorter({ idProperty: 'name' }).sor
         // Typedoc options. Apply defaults, correct paths, etc
         if ( defined(data.package.radic.typedoc) && data.package.radic.typedoc !== false ) {
             let typedocOptions: GulpTypedocOptions = <GulpTypedocOptions>_.merge({}, c.packageDefaults.radic.typedoc, data.package.radic.typedoc);
-            typedocOptions.out                      = join('docs', data.name.replace('/', '-'));
-            typedocOptions.json                     = join('docs', data.name.replace('/', '-'), 'typedoc.json');
+            typedocOptions.out                     = join('docs', data.name.replace('/', '-'));
+            typedocOptions.json                    = join('docs', data.name.replace('/', '-'), 'typedoc.json');
             [ 'readme' ].forEach(key => {
                 if ( typedocOptions[ key ] !== undefined ) {
                     typedocOptions[ key ] = data.path.to(typedocOptions[ key ]);
@@ -155,7 +166,27 @@ const packages: PackageData[] = new DependencySorter({ idProperty: 'name' }).sor
 }));
 
 const packageNames = packages.map(pkg => pkg.name);
+
+
+r.addTemplateParser('markdown-readme-toc', (content) => {
+    let toc = mdtoc(content, c.readme)
+    return content.replace('[[TOC]]', toc.content);
+});
+r.addTemplateParser('scss', (content) => {
+    let result = scss.renderSync(_.merge(c.templates.docs.scss, {
+        data: content
+
+    }))
+    return result.css.toString();
+})
+r.addTemplateParser('pug', (content) => {
+    const compile = pug.compile(content, _.merge(c.templates.docs.pug, <PugOptions>{
+        pretty: true
+    }))
+    return compile({ packageNames, packages, packagePaths });
+})
 //endregion
+
 
 //region: TASKS:TYPESCRIPT
 // the package task prefix names for src (populates by createTsTask() calls)
@@ -294,11 +325,15 @@ if ( c.idea ) {
                 gulp.src('.idea/jsLibraryMappings.xml')
                     .pipe(xmlEdit((xml: IdeaJsMappings) => {
                         // if(xml.project.component.length > 0) {
-                        if ( xml.project.component[ 0 ].file[ 0 ].$.libraries.includes('tsconfig$roots') ) {
-                            xml.project.component[ 0 ].file[ 0 ].$.libraries = xml.project.component[ 0 ].file[ 0 ].$.libraries
-                                .replace(', tsconfig$roots', '')
-                                .replace('tsconfig$roots, ', '')
-                                .replace('tsconfig$roots', '')
+                        if ( isArray(xml.project.component[ 0 ].file) ) {
+                            xml.project.component[ 0 ].file.forEach((file, i) => {
+                                if ( xml.project.component[ 0 ].file[ i ].$.libraries.includes('tsconfig$roots') ) {
+                                    xml.project.component[ 0 ].file[ i ].$.libraries = xml.project.component[ 0 ].file[ i ].$.libraries
+                                        .replace(', tsconfig$roots', '')
+                                        .replace('tsconfig$roots, ', '')
+                                        .replace('tsconfig$roots', '')
+                                }
+                            })
                         }
                         return xml;
                     }))
@@ -317,24 +352,63 @@ if ( c.idea ) {
 //endregion
 
 
-//region: TASKS: README
-gulp.task('readme', (cb) => {
-    r
-        .template('README.md')
-        .applyParsers([ 'markdown-readme-toc' ])
-        .writeTo('./README.md', true)
+//region: TASKS: README / DOCS / GHPAGES
+gulp.task('docs:templates', [ 'clean:docs:templates' ], (cb) => {
+    // create index page / style
+    r.template('docs/index.pug').applyParsers([ 'pug' ]).writeTo('docs/index.html', true);
+    log(`Compiled and written {cyan}templates/docs/index.pug{/cyan} to {cyan}docs/index.html{/cyan}`)
+    r.template('docs/stylesheet.scss').parse(function(this:Template, content:string) {
+        let result = scss.renderSync({
+            file   : this.getFilePath()
+        })
+        content = result.css.toString();
+        return content;
+    }).writeTo('docs/stylesheet.css', true);
+
+    log(`Compiled and written {cyan}templates/docs/stylesheet.scss{/cyan} to {cyan}docs/index.scss{/cyan}`)
     cb()
+})
+gulp.task('docs:script', (cb) => {
+    exec(resolve('node_modules/.bin/tsc'), { cwd: 'scripts/templates/docs' })
+        .on('exit', () => {
+            cb()
+        })
+})
+gulp.task('serve:docs', [ 'docs' ], () => {
+    if ( docsServer.active ) {
+        log('docServer already active. exiting')
+        docsServer.exit();
+    }
+    log('docServer initializing')
+    docsServer.init({
+        server: {
+            baseDir: './docs'
+        }
+    })
+    log('watching {cyan}scripts/templates/**/*{/cyan}')
+    gulp.watch('scripts/templates/**/*', () => {
+        gulp.start('docs:templates', 'docs:script')
+    }).on('change', () => {
+        if ( docsServer.active ) {
+            docsServer.reload()
+        }
+    })
+});
+gulp.task(`clean:docs`, (cb) => { pump(gulp.src('docs'), clean(), (err) => cb(err)) });
+gulp.task(`clean:docs:templates`, (cb) => { pump(gulp.src('docs/{index.html,stylesheet.scss}'), clean(), (err) => cb(err)) });
+gulp.task('docs', () => sequence('clean:docs', 'docs:ts', 'docs:templates', 'docs:script'))
+
+
+gulp.task('readme', (cb) => {
+    r.template('README.md').writeTo('./README.md', true);
 })
 //endregion
 
 
 //region: MAIN TASKS
-gulp.task('clean', [ `clean:${c.ts.taskPrefix}`, `clean:${c.ts.taskPrefix}:test` ])
+gulp.task('clean', [ `clean:${c.ts.taskPrefix}`, `clean:${c.ts.taskPrefix}:test`, 'clean:docs' ])
 gulp.task('build', [ 'clean' ], () => gulp.start(`build:${c.ts.taskPrefix}`, `build:${c.ts.taskPrefix}:test`, 'idea'))
 gulp.task('watch', [ 'build' ], () => gulp.start(`watch:${c.ts.taskPrefix}`, `watch:${c.ts.taskPrefix}:test`))
-gulp.task('docs', [`docs:${c.ts.taskPrefix}`], (cb) => {
-
-}) // deploy
 gulp.task('default', [ 'build' ])
 gulp.task('list', (cb) => {
     let args = yargs
