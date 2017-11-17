@@ -4,9 +4,33 @@ import { LoggerInstance } from 'winston';
 import * as inquirer from '../types/inquirer';
 import { InspectOptions } from 'util';
 import { MarkdownTocOptions } from 'markdown-toc';
-import { IPackageJSON } from '../types/package.json';
+
 import { TsConfig } from 'gulp-typescript/release/types';
 
+export interface PackageData {
+    path: {
+        toString: () => string
+        to: (...args: string[]) => string
+        glob: (pattern: string | string[]) => string[]
+    },
+    directory: string,
+    package: IPackageJSON,
+    name: string,
+    tsconfig: TsConfig,
+    depends: string[],
+    dependencies: { [name: string]: string }
+}
+
+export interface GulpGhPagesOptions {
+    src?: string
+    remoteUrl?: string;
+    origin?: string;
+    branch?: string;
+    force?:boolean
+    cacheDir?: string;
+    push?: boolean;
+    message?: string;
+}
 
 export interface GulpTypedocOptions {
     out: string;
@@ -26,6 +50,142 @@ export interface GulpTypedocOptions {
     gaID?: string;
     gaSite?: string;
     verbose?: boolean;
+}
+
+export interface IPackageJSON extends Object {
+
+    [key: string]: any
+
+    radic?: {
+        [key: string]: any
+        typedoc?: GulpTypedocOptions | false
+        ghpages?: GulpGhPagesOptions | false
+    }
+
+    readonly name: string;
+
+    readonly version?: string;
+
+    readonly description?: string;
+
+    readonly keywords?: string[];
+
+    readonly homepage?: string;
+
+    readonly bugs?: string | IBugs;
+
+    readonly license?: string;
+
+    readonly author?: string | IAuthor;
+
+    readonly contributors?: string[] | IAuthor[];
+
+    readonly files?: string[];
+
+    readonly main?: string;
+
+    readonly bin?: string | IBinMap;
+
+    readonly man?: string | string[];
+
+    readonly directories?: IDirectories;
+
+    readonly repository?: string | IRepository;
+
+    readonly scripts?: IScriptsMap;
+
+    readonly config?: IConfig;
+
+    readonly dependencies?: IDependencyMap;
+
+    readonly devDependencies?: IDependencyMap;
+
+    readonly peerDependencies?: IDependencyMap;
+
+    readonly optionalDependencies?: IDependencyMap;
+
+    readonly bundledDependencies?: string[];
+
+    readonly engines?: IEngines;
+
+    readonly os?: string[];
+
+    readonly cpu?: string[];
+
+    readonly preferGlobal?: boolean;
+
+    readonly private?: boolean;
+
+    readonly publishConfig?: IPublishConfig;
+
+}
+
+/**
+ * An author or contributor
+ */
+export interface IAuthor {
+    name: string;
+    email?: string;
+    homepage?: string;
+}
+
+/**
+ * A map of exposed bin commands
+ */
+export interface IBinMap {
+    [commandName: string]: string;
+}
+
+/**
+ * A bugs link
+ */
+export interface IBugs {
+    email: string;
+    url: string;
+}
+
+export interface IConfig {
+    name?: string;
+    config?: Object;
+}
+
+/**
+ * A map of dependencies
+ */
+export interface IDependencyMap {
+    [dependencyName: string]: string;
+}
+
+/**
+ * CommonJS package structure
+ */
+export interface IDirectories {
+    lib?: string;
+    bin?: string;
+    man?: string;
+    doc?: string;
+    example?: string;
+}
+
+export interface IEngines {
+    node?: string;
+    npm?: string;
+}
+
+export interface IPublishConfig {
+    registry?: string;
+}
+
+/**
+ * A project repository
+ */
+export interface IRepository {
+    type: string;
+    url: string;
+}
+
+export interface IScriptsMap {
+    [scriptName: string]: string;
 }
 
 export type List<T> = ArrayLike<T>;
@@ -60,25 +220,28 @@ export type IdeaBoolean = 'true' | 'false'
 
 export interface RLoggerConfig {
     [key: string]: any
+
     level        ?: LogLevel,
     useLevelIcons?: boolean
     timestamp?: boolean
 }
+
 export interface RConfig {
     [key: string]: any
-    templatesPath?:string
+
+    templatesPath?: string
     idea ?: boolean
     pkg  ?: IPackageJSON
     lerna?: any
     log?: RLoggerConfig,
-    readme?:MarkdownTocOptions,
+    readme?: MarkdownTocOptions,
     ts   ?: {
         [key: string]: any
         config    ?: any
         taskPrefix?: string,
         defaults  ?: TSProjectOptions
     },
-    packageDefaults?:Partial<IPackageJSON>
+    packageDefaults?: Partial<IPackageJSON>
 }
 
 export interface IdeaIml {
@@ -221,7 +384,7 @@ export interface OutputHelperOptionsConfigTableStyle {
     'middle'      ?: string,
 }
 
-export interface OutputHelperOptionsConfig{
+export interface OutputHelperOptionsConfig {
     quiet?: boolean,
     colors?: boolean,
     options?: {
@@ -291,18 +454,4 @@ export interface Figures {
     fiveSixths: string
     fiveEighths: string
     sevenEighths: string
-}
-
-export interface PackageData {
-    path: {
-        toString: () => string
-        to: (...args: string[]) => string
-        glob: (pattern: string | string[]) => string[]
-    },
-    directory: string,
-    package: IPackageJSON,
-    name: string,
-    tsconfig: TsConfig,
-    depends: string[],
-    dependencies: { [name: string]: string }
 }

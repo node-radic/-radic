@@ -58,14 +58,23 @@ const c: RConfig = {
     },
     packageDefaults: {
         radic: {
+            ghpages: {
+                remoteUrl: '',
+                origin  : 'origin',
+                branch  : 'gh-pages',
+                push    : true,
+                force   : false,
+                message : 'update [timestamp]',
+                cacheDir: '.publish'
+            },
             typedoc: {
                 module             : 'commonjs',
                 mode               : 'file',
                 target             : 'es6',
                 hideGenerator      : false,
-                json               : 'docs/typedoc.json',
+                json               : 'docs/typedoc/typedoc.json',
                 verbose            : true,
-                out                : 'docs/typescript',
+                out                : 'docs/typedoc',
                 includeDeclarations: false,
                 excludeExternals   : true,
                 plugins            : [
@@ -84,10 +93,11 @@ const c: RConfig = {
 
 //region: HELPERS, CLASSES, FUNCTIONS
 //IO
-const r     = new Radic(c);
-const info  = r.log.bind(r)
-const log   = r.log.bind(r)
-const error = r.error.bind(r)
+const r       = new Radic(c);
+const defined = (val) => ! isUndefined(val)
+const info    = r.log.bind(r)
+const log     = r.log.bind(r)
+const error   = r.error.bind(r)
 r.addTemplateParser('markdown-readme-toc', (content) => {
     let toc = mdtoc(content, c.readme)
     return content.replace('[[TOC]]', toc.content);
@@ -102,25 +112,47 @@ const packagePaths            = globule
     .map(path => resolve(path))
     .filter(path => statSync(path).isDirectory());
 // noinspection ReservedWordAsName
-const packages: PackageData[] = new DependencySorter({ idProperty: 'name' }).sort(
-    packagePaths.map(path => {
-        const pkg = require(resolve(path, 'package.json'))
-        return <PackageData> {
-            path        : {
-                toString: () => resolve(path),
-                to      : (...args: string[]) => resolve.apply(null, [ path ].concat(args)),
-                glob    : (pattern: string | string[]) => _.toArray(pattern).map(pattern => resolve(path, pattern))
-            },
-            directory   : basename(path),
-            package     : pkg,
-            name        : pkg.name,
-            tsconfig    : require(resolve(path, 'tsconfig.json')),
-            depends     : Object.keys(pkg.dependencies),
-            dependencies: pkg.dependencies
+const packages: PackageData[] = new DependencySorter({ idProperty: 'name' }).sort(packagePaths.map(path => {
+
+    const pkg  = require(resolve(path, 'package.json'))
+    // general data
+    const data = <PackageData> {
+        path        : {
+            toString: () => resolve(path),
+            to      : (...args: string[]) => resolve.apply(null, [ path ].concat(args)),
+            glob    : (pattern: string | string[]) => _.toArray(pattern).map(pattern => resolve(path, pattern))
+        },
+        directory   : basename(path),
+        package     : pkg,
+        name        : pkg.name,
+        tsconfig    : require(resolve(path, 'tsconfig.json')),
+        depends     : Object.keys(pkg.dependencies),
+        dependencies: pkg.dependencies
+    }
+
+    // apply package defaults
+    data.package = _.merge(data.package, {
+        radic: c.packageDefaults.radic
+    }, data.package)
+
+    // Radic options (in package.json)
+    if ( defined(pkg.package.radic) ) {
+        let radic = pkg.package.radic;
+
+        // Typedoc options. Apply defaults, correct paths, etc
+        if ( defined(radic.typedoc) ) {
+            let typedocOptions: GulpTypedocOptions = _.merge({}, c.packageDefaults.radic.typedoc, pkg.package.radic.typedoc);
+            [ 'out', 'json', 'readme' ].forEach(key => {
+                if ( typedocOptions[ key ] !== undefined ) {
+                    typedocOptions[ key ] = pkg.path.to(typedocOptions[ key ]);
+                }
+            })
+            radic.typedoc = typedocOptions;
         }
-    })
-);
-const packageNames            = packages.map(pkg => pkg.name);
+    }
+}));
+
+const packageNames = packages.map(pkg => pkg.name);
 //endregion
 
 
@@ -241,6 +273,7 @@ const createTsTask = (name: string, pkg: PackageData, dest, tsProject: TSProject
             gulp.start('build:' + name, 'idea')
         })
     });
+    gulp.task('doc:' + name, () => gulp.src(pkg.path.to('src/**/*.ts')).pipe(typedoc(pkg.package.radic.typedoc)))
     srcNames.push(name)
     //endregion
 
@@ -268,7 +301,9 @@ const createTsTask = (name: string, pkg: PackageData, dest, tsProject: TSProject
     //endregion
 }
 packages.forEach(pkg => createTsTask(`${c.ts.taskPrefix}:${pkg.directory}`, pkg, '/', {}));
-[ 'build', 'clean', 'watch' ].forEach(prefix => gulp.task(`${prefix}:ts`, srcNames.map(name => `${prefix}:${name}`)));
+// src
+[ 'doc', 'build', 'clean', 'watch' ].forEach(prefix => gulp.task(`${prefix}:ts`, srcNames.map(name => `${prefix}:${name}`)));
+// test
 [ 'build', 'clean', 'watch' ].forEach(prefix => gulp.task(`${prefix}:ts:test`, testNames.map(name => `${prefix}:${name}`)));
 //endregion
 
@@ -277,17 +312,6 @@ packages.forEach(pkg => createTsTask(`${c.ts.taskPrefix}:${pkg.directory}`, pkg,
 let typedocNames = [];
 packages.forEach(pkg => {
 // Run typedoc, if configured
-    if ( isUndefined(pkg.package.radic) || isUndefined(pkg.package.radic.typedoc) ) {
-        return;
-    }
-    let name                               = `doc:${pkg.directory}`
-    let typedocOptions: GulpTypedocOptions = _.merge({}, c.packageDefaults.radic.typedoc, pkg.package.radic.typedoc);
-    // correct paths
-    [ 'out', 'json', 'readme' ].forEach(key => {
-        if ( typedocOptions[ key ] !== undefined ) {
-            typedocOptions[ key ] = pkg.path.to(typedocOptions[ key ]);
-        }
-    })
 
     gulp.task(`build:${name}`, [ `clean:${c.ts.taskPrefix}:${pkg.directory}`, `build:${c.ts.taskPrefix}:${pkg.directory}` ], () =>
         gulp.src(pkg.path.to('src/**/*.ts')).pipe(typedoc(typedocOptions))
@@ -300,16 +324,7 @@ packages.forEach(pkg => {
 //endregion
 
 //region: TASKS: GHPAGES / TYPEDOC
-gulp.task('doc', () => {
-    packages.forEach(pkg => {
-        if ( pkg.package.radic === undefined ) return;
-        let radic = pkg.package.radic;
-        if ( radic.typedoc ) {
-            gulp.src(pkg.path.to('src/*.ts'))
-                .pipe(typedoc(radic.typedoc))
-        }
-    })
-})
+
 //endregion
 
 
