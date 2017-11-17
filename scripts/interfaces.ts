@@ -3,7 +3,30 @@ import { Settings } from 'gulp-typescript';
 import { LoggerInstance } from 'winston';
 import * as inquirer from '../types/inquirer';
 import { InspectOptions } from 'util';
-import { HelperOptionsConfig, HelperOptionsConfigOption } from '../../interfaces';
+import { MarkdownTocOptions } from 'markdown-toc';
+import { IPackageJSON } from '../types/package.json';
+import { TsConfig } from 'gulp-typescript/release/types';
+
+
+export interface GulpTypedocOptions {
+    out: string;
+    mode?: string;
+    json?: string;
+    exclude?: string;
+    includeDeclarations?: boolean;
+    externalPattern?: string;
+    excludeExternals?: boolean;
+    module?: string;
+    plugins?: string[]
+    target?: string;
+    theme?: string;
+    name?: string;
+    readme?: string;
+    hideGenerator?: boolean;
+    gaID?: string;
+    gaSite?: string;
+    verbose?: boolean;
+}
 
 export type List<T> = ArrayLike<T>;
 
@@ -35,24 +58,27 @@ export type PartialDeep<T> = {
 export type TSProjectOptions = Settings & ts.CompilerOptions
 export type IdeaBoolean = 'true' | 'false'
 
-export interface GulpConfig {
+export interface RLoggerConfig {
     [key: string]: any
-
+    level        ?: LogLevel,
+    useLevelIcons?: boolean
+    timestamp?: boolean
+}
+export interface RConfig {
+    [key: string]: any
+    templatesPath?:string
     idea ?: boolean
-    pkg  ?: any
+    pkg  ?: IPackageJSON
     lerna?: any
-    log?: {
-        [key: string]: any
-        level        ?: LogLevel,
-        useLevelIcons?: boolean
-        timestamp?: boolean
-    },
+    log?: RLoggerConfig,
+    readme?:MarkdownTocOptions,
     ts   ?: {
         [key: string]: any
         config    ?: any
         taskPrefix?: string,
         defaults  ?: TSProjectOptions
-    }
+    },
+    packageDefaults?:Partial<IPackageJSON>
 }
 
 export interface IdeaIml {
@@ -195,12 +221,12 @@ export interface OutputHelperOptionsConfigTableStyle {
     'middle'      ?: string,
 }
 
-export interface OutputHelperOptionsConfig extends HelperOptionsConfig {
+export interface OutputHelperOptionsConfig{
     quiet?: boolean,
     colors?: boolean,
     options?: {
-        quiet?: HelperOptionsConfigOption,
-        colors?: HelperOptionsConfigOption
+        quiet?: boolean
+        colors?: boolean
     },
     resetOnNewline?: boolean,
     styles?: { [name: string]: string },
@@ -265,4 +291,18 @@ export interface Figures {
     fiveSixths: string
     fiveEighths: string
     sevenEighths: string
+}
+
+export interface PackageData {
+    path: {
+        toString: () => string
+        to: (...args: string[]) => string
+        glob: (pattern: string | string[]) => string[]
+    },
+    directory: string,
+    package: IPackageJSON,
+    name: string,
+    tsconfig: TsConfig,
+    depends: string[],
+    dependencies: { [name: string]: string }
 }

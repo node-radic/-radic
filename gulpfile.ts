@@ -13,27 +13,36 @@ import { basename, join, resolve } from 'path';
 import * as _ from 'lodash';
 import { existsSync, statSync } from 'fs';
 import { exec } from 'child_process';
-import { GulpConfig, IdeaIml, IdeaJsMappings, TSProjectOptions } from './scripts/interfaces';
+import { GulpTypedocOptions, IdeaIml, IdeaJsMappings, PackageData, RConfig, TSProjectOptions } from './scripts/interfaces';
 import * as yargs from 'yargs';
 import { defer } from 'q';
-import { IO } from './scripts/IO';
+import { Radic } from './scripts/Radic';
+import { isUndefined } from 'util';
+// noinspection ES6UnusedImports
+import typedoc = require('gulp-typedoc');
+import mdtoc            = require('markdown-toc');
+
 
 const clean            = require('gulp-clean')
 const pump             = require('pump')
 const DependencySorter = require('dependency-sorter')
+
+
 //endregion
 
+
 //region: CONFIG
-const c: GulpConfig = {
-    idea : true,
-    pkg  : require('./package.json'),
-    lerna: require('./lerna.json'),
-    log  : {
+const c: RConfig = {
+    idea           : true,
+    templatesPath  : resolve('./scripts/templates'),
+    pkg            : require('./package.json'),
+    lerna          : require('./lerna.json'),
+    log            : {
         level        : 'info',
         useLevelIcons: true,
-        timestamp: true
+        timestamp    : true
     },
-    ts   : {
+    ts             : {
         config    : require('./tsconfig.json'),
         taskPrefix: 'ts',
         defaults  : <TSProjectOptions>{
@@ -42,34 +51,61 @@ const c: GulpConfig = {
             inlineSourceMap: false,
             inlineSources  : false
         }
+    },
+    readme         : {
+        firsth1: true,
+        bullets: '-'
+    },
+    packageDefaults: {
+        radic: {
+            typedoc: {
+                module             : 'commonjs',
+                mode               : 'file',
+                target             : 'es6',
+                hideGenerator      : false,
+                json               : 'docs/typedoc.json',
+                verbose            : true,
+                out                : 'docs/typescript',
+                includeDeclarations: false,
+                excludeExternals   : true,
+                plugins            : [
+                    'typedoc-plantuml',
+                    'typedoc-plugin-markdown',
+                    'typedoc-plugin-single-line-tags',
+                    'typedoc-plugin-sourcefile-url'
+                ],
+                exclude            : [ 'types', 'test' ].join(',')
+            }
+        }
     }
 };
 //endregion
 
+
 //region: HELPERS, CLASSES, FUNCTIONS
 //IO
-const io: IO = new IO(c)
-let consoleLogger = io.logger.transports[0];
-io.logger.startTimer();
-const info   = io.logger.info.bind(io.logger)
-const log    = io.logger.info.bind(io.logger)
-//log
-Object.assign(gutil, { log: (msg, ...optional) => io.logger.info(msg, ...optional) });
-
-
+const r     = new Radic(c);
+const info  = r.log.bind(r)
+const log   = r.log.bind(r)
+const error = r.error.bind(r)
+r.addTemplateParser('markdown-readme-toc', (content) => {
+    let toc = mdtoc(content, c.readme)
+    return content.replace('[[TOC]]', toc.content);
+});
+Object.assign(gutil, { log: (msg, ...optional) => info(msg, ...optional) });
 //endregion
 
 
 //region: RESOLVE PACKAGES
-const packagePaths = globule
+const packagePaths            = globule
     .find('packages/*')
     .map(path => resolve(path))
     .filter(path => statSync(path).isDirectory());
 // noinspection ReservedWordAsName
-const packages     = new DependencySorter({ idProperty: 'name' }).sort(
+const packages: PackageData[] = new DependencySorter({ idProperty: 'name' }).sort(
     packagePaths.map(path => {
         const pkg = require(resolve(path, 'package.json'))
-        return {
+        return <PackageData> {
             path        : {
                 toString: () => resolve(path),
                 to      : (...args: string[]) => resolve.apply(null, [ path ].concat(args)),
@@ -84,7 +120,7 @@ const packages     = new DependencySorter({ idProperty: 'name' }).sort(
         }
     })
 );
-const packageNames = packages.map(pkg => pkg.name);
+const packageNames            = packages.map(pkg => pkg.name);
 //endregion
 
 
@@ -175,7 +211,7 @@ let srcNames = []
 // the package task prefix names for test works same as src but
 // creates [clean,build,watch]:ts:test:${packageName} task name array for the [clean,build,watch]:ts:test tasks
 let testNames      = []
-const createTsTask = (name, pkg, dest, tsProject: TSProjectOptions = {}) => {
+const createTsTask = (name: string, pkg: PackageData, dest, tsProject: TSProjectOptions = {}) => {
 
     //region: clean, build and watch tasks for the src directory
     // need to manually set up clean paths because the src directory will be compiled into its parent directory, the package root
@@ -188,12 +224,18 @@ const createTsTask = (name, pkg, dest, tsProject: TSProjectOptions = {}) => {
             globule
                 .find(join(pkg.path.to('src'), '**/*'))
                 .filter(path => statSync(path).isDirectory())
-                .map(path => path.replace(pkg.path.to('src'), pkg.path))
+                .map(path => path.replace(pkg.path.to('src'), pkg.path.toString()))
         )
         .concat(globule.find(join(pkg.path.to('*.js'))));
 
     gulp.task('clean:' + name, (cb) => { pump(gulp.src(cleanPaths), clean(), (err) => cb(err)) });
-    gulp.task('build:' + name, (cb) => { exec(resolve('node_modules/.bin/tsc'), { cwd: pkg.path + '' }).on('exit', () => cb()) })
+    gulp.task('build:' + name, (cb) => {
+        // Run Typescript Compiler
+        exec(resolve('node_modules/.bin/tsc'), { cwd: pkg.path + '' })
+            .on('exit', () => {
+                cb()
+            })
+    })
     gulp.task('watch:' + name, () => {
         gulp.watch([ pkg.path.to('src/**/*.ts'), pkg.path.to('test/**/*.ts') ], (event: WatchEvent) => {
             gulp.start('build:' + name, 'idea')
@@ -230,14 +272,61 @@ packages.forEach(pkg => createTsTask(`${c.ts.taskPrefix}:${pkg.directory}`, pkg,
 [ 'build', 'clean', 'watch' ].forEach(prefix => gulp.task(`${prefix}:ts:test`, testNames.map(name => `${prefix}:${name}`)));
 //endregion
 
-//region: TASKS: GHPAGES / TYPEDOC
 
+//region: TASKS: TYPEDOC
+let typedocNames = [];
+packages.forEach(pkg => {
+// Run typedoc, if configured
+    if ( isUndefined(pkg.package.radic) || isUndefined(pkg.package.radic.typedoc) ) {
+        return;
+    }
+    let name                               = `doc:${pkg.directory}`
+    let typedocOptions: GulpTypedocOptions = _.merge({}, c.packageDefaults.radic.typedoc, pkg.package.radic.typedoc);
+    // correct paths
+    [ 'out', 'json', 'readme' ].forEach(key => {
+        if ( typedocOptions[ key ] !== undefined ) {
+            typedocOptions[ key ] = pkg.path.to(typedocOptions[ key ]);
+        }
+    })
+
+    gulp.task(`build:${name}`, [ `clean:${c.ts.taskPrefix}:${pkg.directory}`, `build:${c.ts.taskPrefix}:${pkg.directory}` ], () =>
+        gulp.src(pkg.path.to('src/**/*.ts')).pipe(typedoc(typedocOptions))
+    )
+    gulp.task('clean:' + name, (cb) => { pump(gulp.src(typedocOptions.out), clean(), (err) => cb(err)) });
+
+    typedocNames.push(`build:${name}`)
+    typedocNames.push(`clean:${name}`)
+})
+//endregion
+
+//region: TASKS: GHPAGES / TYPEDOC
+gulp.task('doc', () => {
+    packages.forEach(pkg => {
+        if ( pkg.package.radic === undefined ) return;
+        let radic = pkg.package.radic;
+        if ( radic.typedoc ) {
+            gulp.src(pkg.path.to('src/*.ts'))
+                .pipe(typedoc(radic.typedoc))
+        }
+    })
+})
+//endregion
+
+
+//region: TASKS: README
+gulp.task('readme', (cb) => {
+    r
+        .template('README.md')
+        .applyParsers([ 'markdown-readme-toc' ])
+        .writeTo('./README.md', true)
+    cb()
+})
 //endregion
 
 
 //region: MAIN TASKS
 gulp.task('clean', [ `clean:${c.ts.taskPrefix}`, `clean:${c.ts.taskPrefix}:test` ])
-gulp.task('build', [ 'clean' ], () => gulp.start(`build:${c.ts.taskPrefix}`, `build:${c.ts.taskPrefix}:test`, 'idea'))
+gulp.task('build', [ 'clean' ], () => gulp.start(`build:${c.ts.taskPrefix}`, `build:${c.ts.taskPrefix}:test`, `build:doc`, 'idea'))
 gulp.task('watch', [ 'build' ], () => gulp.start(`watch:${c.ts.taskPrefix}`, `watch:${c.ts.taskPrefix}:test`))
 gulp.task('default', [ 'build' ])
 gulp.task('list', (cb) => {

@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Colors } from '../packages/console-colors/src/lib/colors';
 import { Parser } from '../packages/console-colors/src/lib/parser';
 import { OutputUtil } from './OutputUtil';
-import { GulpConfig, OutputOptions } from './interfaces';
+import { RConfig, OutputOptions } from './interfaces';
 import { inspect } from 'util';
 import { createLogger} from './logger';
 import { LoggerInstance } from 'winston';
@@ -13,18 +13,20 @@ const seperator = (msg = '') => new Separator(` -=${msg}=- `)
 
 export class IO {
 
-    logger:LoggerInstance
+    protected logger:LoggerInstance
 
     public get types(): QuestionType[] { return [ 'input', 'confirm', 'list', 'rawlist', 'expand', 'checkbox', 'password', 'autocomplete', 'datetime' ] }
 
-    constructor(protected config:GulpConfig) {
-        this.logger = createLogger(config.log);
-
+    constructor(protected config:RConfig) {
         let promptNames = Object.keys(prompts);
         if ( ! promptNames.includes('autocomplete') ) registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'))
         if ( ! promptNames.includes('datetime') ) registerPrompt('datetime', require('inquirer-datepicker-prompt'))
         this._parser = new Parser()
         this.util    = new OutputUtil(this);
+    }
+
+    attachLogger(logger:LoggerInstance){
+        this.logger = logger;
     }
 
     protected _parser: Parser
@@ -75,7 +77,7 @@ export class IO {
     }
 
 
-    async confirm(message: MessageType, def?: string): Promise<boolean> {
+    async confirm(message: MessageType, def: boolean=true): Promise<boolean> {
         return this.prompt<boolean>({ type: 'confirm', default: def, message })
     }
 

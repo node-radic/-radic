@@ -3,3 +3,4 @@
 /*/yarn.lock
 /*/packages-lock.json
 /*/types
+/*/.nyc_output

@@ -5,10 +5,7 @@ Radic's NPM Packages
 **WIP** !!!
 This repository pretty much contains all my public non browser/DOM node packages.
 
-- [Radic's NPM Packages](#radics-npm-packages)
-  - [Summary](#summary)
-  - [Packages](#packages)
-  - [Development](#development)
+[[TOC]]
 
 Summary
 -------

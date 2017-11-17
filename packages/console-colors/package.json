@@ -17,6 +17,17 @@
         "clean": "rimraf types test/**/*.js src/**/*.js",
         "docs": "cd .. ; rm -r docs/typedocs; typedoc --hideGenerator --includeDeclarations --mode file --out docs/typedocs --readme README.md src"
     },
+    "radic": {
+        "typedoc": {
+            "module": "commonjs",
+            "target": "es6",
+            "mode": "file",
+            "out": "docs/typedoc",
+            "readme": "README.md",
+            "name": "Console Colors"
+        },
+        "ghpages": true
+    },
     "author": "Robin Radic",
     "license": "MIT",
     "dependencies": {
