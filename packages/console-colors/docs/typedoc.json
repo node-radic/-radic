@@ -1,0 +1,1125 @@
+{
+	"id": 301,
+	"name": "Console Colors",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 305,
+			"name": "Colors",
+			"kind": 128,
+			"kindString": "Class",
+			"flags": {
+				"isExported": true
+			},
+			"children": [
+				{
+					"id": 306,
+					"name": "palette",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 40,
+							"character": 11
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Palette"
+					},
+					"defaultValue": " simple()"
+				},
+				{
+					"id": 307,
+					"name": "convert",
+					"kind": 262144,
+					"kindString": "Accessor",
+					"flags": {
+						"isExported": true
+					},
+					"getSignature": [
+						{
+							"id": 308,
+							"name": "__get",
+							"kind": 524288,
+							"kindString": "Get signature",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"name": "ColorConvert"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 42,
+							"character": 15
+						}
+					]
+				},
+				{
+					"id": 309,
+					"name": "supports",
+					"kind": 262144,
+					"kindString": "Accessor",
+					"flags": {
+						"isExported": true
+					},
+					"getSignature": [
+						{
+							"id": 310,
+							"name": "__get",
+							"kind": 524288,
+							"kindString": "Get signature",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"name": "SupportsColorOptions"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 44,
+							"character": 16
+						}
+					]
+				},
+				{
+					"id": 311,
+					"name": "get",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 312,
+							"name": "get",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 313,
+									"name": "color",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 314,
+									"name": "close",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {
+										"isOptional": true
+									},
+									"type": {
+										"type": "intrinsic",
+										"name": "boolean"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 47,
+							"character": 7
+						}
+					]
+				},
+				{
+					"id": 318,
+					"name": "getStyles",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 319,
+							"name": "getStyles",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"name": "Palette"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 58,
+							"character": 13
+						}
+					]
+				},
+				{
+					"id": 315,
+					"name": "getTrucolorColor",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 316,
+							"name": "getTrucolorColor",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 317,
+									"name": "color",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Trucolor"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 52,
+							"character": 20
+						}
+					]
+				},
+				{
+					"id": 323,
+					"name": "reset",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 324,
+							"name": "reset",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "this"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 69,
+							"character": 9
+						}
+					]
+				},
+				{
+					"id": 320,
+					"name": "styles",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 321,
+							"name": "styles",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 322,
+									"name": "styles",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "Object"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "this"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 63,
+							"character": 10
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						306
+					]
+				},
+				{
+					"title": "Accessors",
+					"kind": 262144,
+					"children": [
+						307,
+						309
+					]
+				},
+				{
+					"title": "Methods",
+					"kind": 2048,
+					"children": [
+						311,
+						318,
+						315,
+						323,
+						320
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/colors.ts",
+					"line": 37,
+					"character": 19
+				}
+			]
+		},
+		{
+			"id": 348,
+			"name": "Parser",
+			"kind": 128,
+			"kindString": "Class",
+			"flags": {
+				"isExported": true
+			},
+			"children": [
+				{
+					"id": 349,
+					"name": "colors",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 11,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Colors",
+						"id": 305
+					},
+					"defaultValue": " new Colors"
+				},
+				{
+					"id": 353,
+					"name": "clean",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 354,
+							"name": "clean",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 355,
+									"name": "text",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 22,
+							"character": 9
+						}
+					]
+				},
+				{
+					"id": 356,
+					"name": "getTagsExp",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isProtected": true
+					},
+					"signatures": [
+						{
+							"id": 357,
+							"name": "getTagsExp",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"type": {
+								"type": "reference",
+								"name": "RegExp"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 27,
+							"character": 24
+						}
+					]
+				},
+				{
+					"id": 358,
+					"name": "getTextTags",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isProtected": true
+					},
+					"signatures": [
+						{
+							"id": 359,
+							"name": "getTextTags",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 360,
+									"name": "text",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								},
+								{
+									"id": 361,
+									"name": "tagExp",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "reference",
+										"name": "RegExp"
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "Array",
+								"typeArguments": [
+									{
+										"type": "array",
+										"elementType": {
+											"type": "intrinsic",
+											"name": "string"
+										}
+									}
+								]
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 31,
+							"character": 25
+						}
+					]
+				},
+				{
+					"id": 350,
+					"name": "parse",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true
+					},
+					"signatures": [
+						{
+							"id": 351,
+							"name": "parse",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 352,
+									"name": "text",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 13,
+							"character": 9
+						}
+					]
+				},
+				{
+					"id": 365,
+					"name": "parseColor",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isProtected": true
+					},
+					"signatures": [
+						{
+							"id": 366,
+							"name": "parseColor",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 367,
+									"name": "color",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 48,
+							"character": 24
+						}
+					]
+				},
+				{
+					"id": 362,
+					"name": "parseTag",
+					"kind": 2048,
+					"kindString": "Method",
+					"flags": {
+						"isExported": true,
+						"isProtected": true
+					},
+					"signatures": [
+						{
+							"id": 363,
+							"name": "parseTag",
+							"kind": 4096,
+							"kindString": "Call signature",
+							"flags": {},
+							"parameters": [
+								{
+									"id": 364,
+									"name": "tag",
+									"kind": 32768,
+									"kindString": "Parameter",
+									"flags": {},
+									"type": {
+										"type": "array",
+										"elementType": {
+											"type": "intrinsic",
+											"name": "string"
+										}
+									}
+								}
+							],
+							"type": {
+								"type": "reference",
+								"name": "ParserParsedTag",
+								"id": 337
+							}
+						}
+					],
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 37,
+							"character": 22
+						}
+					]
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						349
+					]
+				},
+				{
+					"title": "Methods",
+					"kind": 2048,
+					"children": [
+						353,
+						356,
+						358,
+						350,
+						365,
+						362
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/parser.ts",
+					"line": 9,
+					"character": 19
+				}
+			]
+		},
+		{
+			"id": 302,
+			"name": "AnsiRgbColors",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true
+			},
+			"children": [
+				{
+					"id": 304,
+					"name": "bg",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 18,
+							"character": 6
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Array",
+						"typeArguments": [
+							{
+								"type": "intrinsic",
+								"name": "number"
+							}
+						]
+					}
+				},
+				{
+					"id": 303,
+					"name": "fg",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/colors.ts",
+							"line": 17,
+							"character": 6
+						}
+					],
+					"type": {
+						"type": "reference",
+						"name": "Array",
+						"typeArguments": [
+							{
+								"type": "intrinsic",
+								"name": "number"
+							}
+						]
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						304,
+						303
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/colors.ts",
+					"line": 15,
+					"character": 30
+				}
+			]
+		},
+		{
+			"id": 337,
+			"name": "ParserParsedTag",
+			"kind": 256,
+			"kindString": "Interface",
+			"flags": {
+				"isExported": true
+			},
+			"children": [
+				{
+					"id": 338,
+					"name": "colors",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 4,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					}
+				},
+				{
+					"id": 344,
+					"name": "replace",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 7,
+							"character": 11
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 345,
+							"name": "__type",
+							"kind": 65536,
+							"kindString": "Type literal",
+							"flags": {},
+							"signatures": [
+								{
+									"id": 346,
+									"name": "__call",
+									"kind": 4096,
+									"kindString": "Call signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 347,
+											"name": "text",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"sources": [
+								{
+									"fileName": "lib/parser.ts",
+									"line": 7,
+									"character": 12
+								}
+							]
+						}
+					}
+				},
+				{
+					"id": 339,
+					"name": "replacements",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 5,
+							"character": 16
+						}
+					],
+					"type": {
+						"type": "reflection",
+						"declaration": {
+							"id": 340,
+							"name": "__type",
+							"kind": 65536,
+							"kindString": "Type literal",
+							"flags": {},
+							"indexSignature": [
+								{
+									"id": 341,
+									"name": "__index",
+									"kind": 8192,
+									"kindString": "Index signature",
+									"flags": {},
+									"parameters": [
+										{
+											"id": 342,
+											"name": "old",
+											"kind": 32768,
+											"kindString": "Parameter",
+											"flags": {},
+											"type": {
+												"type": "intrinsic",
+												"name": "string"
+											}
+										}
+									],
+									"type": {
+										"type": "intrinsic",
+										"name": "string"
+									}
+								}
+							],
+							"sources": [
+								{
+									"fileName": "lib/parser.ts",
+									"line": 5,
+									"character": 17
+								}
+							]
+						}
+					}
+				},
+				{
+					"id": 343,
+					"name": "string",
+					"kind": 1024,
+					"kindString": "Property",
+					"flags": {
+						"isExported": true
+					},
+					"sources": [
+						{
+							"fileName": "lib/parser.ts",
+							"line": 6,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "string"
+					}
+				}
+			],
+			"groups": [
+				{
+					"title": "Properties",
+					"kind": 1024,
+					"children": [
+						338,
+						344,
+						339,
+						343
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/parser.ts",
+					"line": 3,
+					"character": 32
+				}
+			]
+		},
+		{
+			"id": 333,
+			"name": "isAllLength",
+			"kind": 64,
+			"kindString": "Function",
+			"flags": {},
+			"signatures": [
+				{
+					"id": 334,
+					"name": "isAllLength",
+					"kind": 4096,
+					"kindString": "Call signature",
+					"flags": {},
+					"parameters": [
+						{
+							"id": 335,
+							"name": "value",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "any"
+							}
+						},
+						{
+							"id": 336,
+							"name": "lengths",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {
+								"isRest": true
+							},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "any"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/colors.ts",
+					"line": 35,
+					"character": 15
+				}
+			]
+		},
+		{
+			"id": 329,
+			"name": "isAnyLength",
+			"kind": 64,
+			"kindString": "Function",
+			"flags": {},
+			"signatures": [
+				{
+					"id": 330,
+					"name": "isAnyLength",
+					"kind": 4096,
+					"kindString": "Call signature",
+					"flags": {},
+					"parameters": [
+						{
+							"id": 331,
+							"name": "value",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "any"
+							}
+						},
+						{
+							"id": 332,
+							"name": "lengths",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {
+								"isRest": true
+							},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "any"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "intrinsic",
+						"name": "boolean"
+					}
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/colors.ts",
+					"line": 34,
+					"character": 15
+				}
+			]
+		},
+		{
+			"id": 325,
+			"name": "isLength",
+			"kind": 64,
+			"kindString": "Function",
+			"flags": {},
+			"signatures": [
+				{
+					"id": 326,
+					"name": "isLength",
+					"kind": 4096,
+					"kindString": "Call signature",
+					"flags": {},
+					"parameters": [
+						{
+							"id": 327,
+							"name": "value",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "any"
+							}
+						},
+						{
+							"id": 328,
+							"name": "lengths",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "any"
+								}
+							}
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "boolean"
+						}
+					}
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/colors.ts",
+					"line": 22,
+					"character": 17
+				}
+			]
+		}
+	],
+	"groups": [
+		{
+			"title": "Classes",
+			"kind": 128,
+			"children": [
+				305,
+				348
+			]
+		},
+		{
+			"title": "Interfaces",
+			"kind": 256,
+			"children": [
+				302,
+				337
+			]
+		},
+		{
+			"title": "Functions",
+			"kind": 64,
+			"children": [
+				333,
+				329,
+				325
+			]
+		}
+	]
+}

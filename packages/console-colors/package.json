@@ -22,11 +22,11 @@
             "module": "commonjs",
             "target": "es6",
             "mode": "file",
-            "out": "docs/typedoc",
+            "out": "docs",
             "readme": "README.md",
             "name": "Console Colors"
         },
-        "ghpages": true
+        "ghpages": false
     },
     "author": "Robin Radic",
     "license": "MIT",

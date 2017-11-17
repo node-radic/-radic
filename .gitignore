@@ -18,6 +18,7 @@ run
 target
 *.com
 *.class
+/docs
 *.dll
 *.exe
 *.o
