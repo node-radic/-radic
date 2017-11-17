@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="gulp list" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" path-to-js-file="node_modules/.bin/gulp" application-parameters="--gulpfile gulpfile.ts list" node-parameters="--nolazy -r ts-node/register --inspect" working-dir="$PROJECT_DIR$">
-    <method />
-  </configuration>
-</component>

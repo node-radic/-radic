@@ -1,0 +1,337 @@
+{
+	"id": 1254,
+	"name": "lnav-creator",
+	"kind": 0,
+	"flags": {},
+	"children": [
+		{
+			"id": 1265,
+			"name": "mapper",
+			"kind": 64,
+			"kindString": "Function",
+			"flags": {
+				"isExported": true
+			},
+			"signatures": [
+				{
+					"id": 1266,
+					"name": "mapper",
+					"kind": 4096,
+					"kindString": "Call signature",
+					"flags": {},
+					"parameters": [
+						{
+							"id": 1267,
+							"name": "names",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "array",
+								"elementType": {
+									"type": "intrinsic",
+									"name": "string"
+								}
+							}
+						},
+						{
+							"id": 1268,
+							"name": "prefix",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							},
+							"defaultValue": "\"/var/log/\""
+						},
+						{
+							"id": 1269,
+							"name": "postfix",
+							"kind": 32768,
+							"kindString": "Parameter",
+							"flags": {},
+							"type": {
+								"type": "intrinsic",
+								"name": "string"
+							},
+							"defaultValue": "\".log\""
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "any"
+						}
+					}
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/index.ts",
+					"line": 64,
+					"character": 22
+				}
+			]
+		},
+		{
+			"id": 1255,
+			"name": "logs",
+			"kind": 2097152,
+			"kindString": "Object literal",
+			"flags": {},
+			"children": [
+				{
+					"id": 1256,
+					"name": "atlassian",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 6,
+							"character": 13
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "undefined"
+						}
+					},
+					"defaultValue": " []"
+				},
+				{
+					"id": 1258,
+					"name": "server",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 8,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "undefined"
+						}
+					},
+					"defaultValue": " []"
+				},
+				{
+					"id": 1259,
+					"name": "sonar",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 9,
+							"character": 9
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "undefined"
+						}
+					},
+					"defaultValue": " []"
+				},
+				{
+					"id": 1257,
+					"name": "system",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 7,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "undefined"
+						}
+					},
+					"defaultValue": " []"
+				}
+			],
+			"groups": [
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						1256,
+						1258,
+						1259,
+						1257
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/index.ts",
+					"line": 5,
+					"character": 8
+				}
+			],
+			"type": {
+				"type": "intrinsic",
+				"name": "object"
+			}
+		},
+		{
+			"id": 1260,
+			"name": "partials",
+			"kind": 2097152,
+			"kindString": "Object literal",
+			"flags": {},
+			"children": [
+				{
+					"id": 1261,
+					"name": "atlassian",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 12,
+							"character": 13
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					},
+					"defaultValue": " [\n        '/opt/atlassian/jira/logs/catalina.out',\n        '/opt/atlassian/confluence/logs/catalina.out',\n        '/var/atlassian/application-data/bitbucket/log/launcher.log',\n        '/var/atlassian/application-data/bitbucket/log/atlassian-bitbucket.log',\n        '/var/atlassian/application-data/bitbucket/log/atlassian-bitbucket-access.log',\n        '/var/atlassian/application-data/jira/log/atlassian-greenhopper.log',\n        '/var/atlassian/application-data/jira/log/atlassian-jira.log',\n        '/var/atlassian/application-data/jira/log/atlassian-jira-security.log',\n        '/var/atlassian/application-data/confluence/log/atlassian-confluence.log',\n        '/var/atlassian/application-data/confluence/log/atlassian-synchrony.log'\n    ]"
+				},
+				{
+					"id": 1263,
+					"name": "server",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 35,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					},
+					"defaultValue": " [\n        'psa-horde/psa-horde',\n        'bacula/bacula',\n        'jenkins/jenkins',\n        'plesk-php*-fpm/error',\n        'postgresql/postgresql-*-main',\n        'redis/rediss-server',\n        'sw-cp-server/access',\n        'sw-cp-server/sw-engine',\n        'tomcat*/catalina.out',\n        'nginx/error',\n        'nginx/access',\n        'apache2/access',\n        'apache2/error',\n        'apache2/suexec',\n        'apache2/other_vhosts_access',\n        'cups/access_log',\n        'cups/error_log',\n        'mysql/error.log'\n    ]"
+				},
+				{
+					"id": 1264,
+					"name": "sonar",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 55,
+							"character": 9
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					},
+					"defaultValue": " [\n        'access',\n        'ce',\n        'es',\n        'web',\n        'sonar'\n    ]"
+				},
+				{
+					"id": 1262,
+					"name": "system",
+					"kind": 32,
+					"kindString": "Variable",
+					"flags": {},
+					"sources": [
+						{
+							"fileName": "lib/index.ts",
+							"line": 24,
+							"character": 10
+						}
+					],
+					"type": {
+						"type": "array",
+						"elementType": {
+							"type": "intrinsic",
+							"name": "string"
+						}
+					},
+					"defaultValue": " [\n        'mail',\n        'auth',\n        'kern',\n        'dpkg',\n        'fail2ban',\n        'alternatives',\n        'mintsystem',\n        'boot',\n        'bootstrap'\n    ]"
+				}
+			],
+			"groups": [
+				{
+					"title": "Variables",
+					"kind": 32,
+					"children": [
+						1261,
+						1263,
+						1264,
+						1262
+					]
+				}
+			],
+			"sources": [
+				{
+					"fileName": "lib/index.ts",
+					"line": 11,
+					"character": 12
+				}
+			],
+			"type": {
+				"type": "intrinsic",
+				"name": "object"
+			}
+		}
+	],
+	"groups": [
+		{
+			"title": "Functions",
+			"kind": 64,
+			"children": [
+				1265
+			]
+		},
+		{
+			"title": "Object literals",
+			"kind": 2097152,
+			"children": [
+				1255,
+				1260
+			]
+		}
+	]
+}
