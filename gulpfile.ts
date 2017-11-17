@@ -27,6 +27,7 @@ import { isArray } from 'util';
 import typedoc = require('gulp-typedoc');
 import mdtoc            = require('markdown-toc');
 import { Template } from './scripts/Template';
+import * as ghPages from 'gulp-gh-pages';
 
 sequence.use(<any> gulp);
 
@@ -58,6 +59,14 @@ const c: RGulpConfig = {
             inlineSourceMap: false,
             inlineSources  : false
         }
+    },
+    ghPages: {
+        message: 'Update [timestamp]',
+        push: true,
+        cacheDir: '.publish',
+        branch: 'gh-pages',
+        origin: 'origin',
+        //remoteUrl: ''
     },
     templates      : {
         readme: {
@@ -397,7 +406,12 @@ gulp.task('serve:docs', [ 'docs' ], () => {
 gulp.task(`clean:docs`, (cb) => { pump(gulp.src('docs'), clean(), (err) => cb(err)) });
 gulp.task(`clean:docs:templates`, (cb) => { pump(gulp.src('docs/{index.html,stylesheet.scss}'), clean(), (err) => cb(err)) });
 gulp.task('docs', () => sequence('clean:docs', 'docs:ts', 'docs:templates', 'docs:script'))
+gulp.task('deploy:docs', () => {
+    gulp.src('./docs/**/*')
+        .pipe(ghPages({
 
+        }))
+})
 
 gulp.task('readme', (cb) => {
     r.template('README.md').writeTo('./README.md', true);

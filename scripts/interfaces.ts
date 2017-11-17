@@ -9,6 +9,15 @@ import { TsConfig } from 'gulp-typescript/release/types';
 import {Options as PugOptions} from 'pug';
 
 
+export interface GulpGHPagesOptions {
+    remoteUrl?: string;
+    origin?: string;
+    branch?: string;
+    cacheDir?: string;
+    push?: boolean;
+    message?: string;
+}
+
 export interface RGulpLoggerConfig {
     [key: string]: any
 
@@ -32,6 +41,7 @@ export interface RGulpConfig {
             pug?:PugOptions
         }
     }
+    ghPages?:GulpGHPagesOptions
     ts   ?: {
         [key: string]: any
         config    ?: any

@@ -2,7 +2,6 @@
 import * as inquirer from 'inquirer';
 import { logs } from '../'
 
-
 inquirer.prompt([
     <inquirer.Question> { message: 'What categories do you want', type: 'checkbox', choices: Object.keys(logs), name: 'categories',pageSize: 20 }
 ]).then(answers => {
