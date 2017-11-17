@@ -383,7 +383,7 @@ gulp.task('docs:script', (cb) => {
             cb()
         })
 })
-gulp.task('serve:docs', [ 'docs' ], () => {
+gulp.task('docs:serve', [ 'docs' ], () => {
     if ( docsServer.active ) {
         log('docServer already active. exiting')
         docsServer.exit();
@@ -406,11 +406,8 @@ gulp.task('serve:docs', [ 'docs' ], () => {
 gulp.task(`clean:docs`, (cb) => { pump(gulp.src('docs'), clean(), (err) => cb(err)) });
 gulp.task(`clean:docs:templates`, (cb) => { pump(gulp.src('docs/{index.html,stylesheet.scss}'), clean(), (err) => cb(err)) });
 gulp.task('docs', () => sequence('clean:docs', 'docs:ts', 'docs:templates', 'docs:script'))
-gulp.task('deploy:docs', () => {
-    gulp.src('./docs/**/*')
-        .pipe(ghPages({
-
-        }))
+gulp.task('docs:deploy', () => {
+    return gulp.src('./docs/**/*').pipe(ghPages(c.ghPages))
 })
 
 gulp.task('readme', (cb) => {

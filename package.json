@@ -23,8 +23,11 @@
         "clean:build": "gulp clean",
         "clean:modules": "rimraf node_modules/ *.log",
         "build": "gulp build",
+        "docs": "gulp docs",
+        "docs:serve": "gulp docs:serve",
+        "docs:deploy": "gulp docs:deploy",
         "watch": "gulp watch",
-        "scan:security": "nsp check .",
+        "scan": "nsp check .",
         "test": "lerna run test",
         "stop": "yarn clean"
     },
